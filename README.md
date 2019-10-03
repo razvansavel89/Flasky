@@ -1,102 +1,93 @@
-# CRF Demo web App #
+# CRF Assignment Implementation #
 
-## Installation Instructions ##
+## Run Docker Image ##
 
+* In order to launch the docker container for the AUT, navigate to the project root and execute `docker run -p 5000:5000 <docker_image>`
 
-To run the demo application you need:
+## Project Structure ##
 
-Python 2.7
-pip install the included requirements.txt
-SQLite3, [SQLite 3](https://www.sqlite.org/), effectively any version should work.
-
-To run the application start it after installing the requirements with:
-
+* All the tests created are stored inside `testing` directory 
+* `ui` and `api` directories representing the testing types
+* The application cam be accessed at `http://0.0.0.0:5000/` address (8080 port was already in used by some other locally configured services)
 ```
-On Windows:
-   set FLASK_APP=demo_app
-   
-On Linux:
-   export FLASK_APP=demo_app
-
-flask init-db
-flask run --host=0.0.0.0 --port=8080
-```
-
-Alternatively, a Dockerfile is provided.
-
-## Acceptance Criteria ##
-
-As an end user I can:
-
-1: Register through web portal
-2: Review my user information from the main view
-
-
-As an API Consumer I can:
-
-1: Review users registered in system
-2: If authenticated I can get personal information of users
-3: If authenticated I can update personal information of users
-
-
-## API Brief ##
-
-The Application exposes a simple API with the following routes:
-
-| Route                 | Methods  | Authentication |
-|-----------------------|----------|----------------|
-| /api/auth/token       | GET      | Basic          |
-| /api/users            | GET      | Token          |
-| /api/users/<username> | GET, PUT | Token          |
-
-### Headers ###
-
-Your request headers should set at minimum:
-
-```
-'Content-Type': 'application/json'
-```
-
-### Authentication ###
-
-Access to users information requires a Token based authentication.
-
-To receive a token perform basic authentication against `/api/auth/token` using the username/password you registered with in the Web interface.
-
-For example:
-
-```
->>> curl -u dsyed:1234 http://localhost:8080/api/auth/token
-{
-  "status": "SUCCESS",
-  "token": "MzMyNjQyMzAzODMwNjk1Mzg1MDU4OTA3MTEyMDM3MTQ2NDg5Mzg2"
-}
+ testing/
+    api/
+        config/
+            endpoints.py
+            environment_constants.py
+        support/
+            account_data_provider.py
+        tests_data/
+            account_data.json
+        test_results/
+        test_runners/
+            run_api.tests.sh
+        tests/
+            test_users_endpoint.py
+    ui/  
+        config/  
+            config.robot  
+        features/
+            registration.robot
+            positive_login.robot
+            negative_login.robot
+        test_suites/
+            run_ui_negative_tests.sh
+            run_ui_smoke_tests.sh
+            run_ui_positive_tests.sh
+            run_ui_regression_tests.sh
+        steps/
+            environment_steps.robot
+            landing_page_steps.robot
+            register_page_steps.robot
+            login_page_steps.robot
+            home_page_steps.robot
+        test_data/
+            accounts.robot
+        test_results/
+            smoke/
+            positive/
+            negative/
+            regression/
+        pages/
+            landing_page.robot
+            login_page.robot
+            register_page.robot
+    README.md
 ```
 
-For subsequent accesses to endpoints requiring a token update your request headers to include it:
+## Test Execution ##
 
-```
-'Content-Type': 'application/json'
-'Token': 'MzMyNjQyMzAzODMwNjk1Mzg1MDU4OTA3MTEyMDM3MTQ2NDg5Mzg2'
-```
+#### UI Tests ####
+* In order to execute the UI related tests (as a test suite), you need to navigate from the `terminal` to `testing/ui/test_suites`
+* To execute any of the desired shell file that is pointing to an associated test suite type, run `sh <your_desired_suite>` command
 
-### General API responses ###
+* Associated test results are displayed into the corresponding `testing/ui/test_results/<your_executed_suite>` directory
+* Generated `.html` test results file being something similar to following one:
+![](test_results_ui.png) **Figure 1** - UI Test Results
+![](test_results_ui_detailed.png) **Figure 2** - UI Test Results Detailed
+ 
+#### API Tests ####
 
-All API calls respond in the following scheme:
+* API related tests can be easily found by navigating from the `terminal` to `testing/api/tests_runners/` 
+* Execute `sh run_api_tests.sh` command
+* After all existing tests have been executed, the test results html report can be found within `testing/api/test_results` directory
+* Generated `.html` test results file being something similar to following one:
+![](test_results_api.png) **Figure 3** - API Test Results
 
-```
-{'status': 'SUCCESS/FAILURE',
-           'message': 'human readable message',
-           'payload': {...}}
-```
 
-### Updating user information ###
+## Remarks ##
 
-Subject information can be updated by sending PUT requests with a simple payload like:
-
-```
-
-{'datapoint1': 'value',
- 'datapoint2': 'value',
-  ...}
-```
+* Initially, I had some problems in making the docker container be accessed from the outside
+    * Apparently, on MAC OS, in order to access any resource of a container, wou need to explicitly add the `-h 0.0.0.0` argument when performing `flask run` command
+    
+#
+* The user is able to register other users while he is already authenticated (by accessing /register link)
+    * So basically, the user is able to get anywhere from any place, as long as he has the URL to that page
+* No proper validation is put in place when it comes to registration
+* The `users /PUT` api endpoint allow for user creation, even though nom `username` or `password` is provided as payload
+* The user is able to register himself by adding only spaces as characters for all available attributes
+* In order to have at least one user inside of the DB before starting to execute the tests, I have altered the `schema.sql` file,
+ so that each time the application is run, 2 users will be created by default
+* It is quite useless to assign IDs to all available User Information attribute values. I understand that the application needs to be testable, but not necessarily in such manner
+* I would have expected to get an array of users objects whenever I perform a get request over '/users' endpoint, and not only an array of usernames

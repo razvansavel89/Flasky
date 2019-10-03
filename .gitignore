@@ -2,3 +2,6 @@
 *#
 *.pyc
 instance/*
+/.idea/
+/testing/ui/test_results/
+/testing/api/test_results/

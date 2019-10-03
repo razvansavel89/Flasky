@@ -1,0 +1,30 @@
+{
+  "EXISTING_USER_A": {
+    "username": "razvan.savel",
+    "password": "Test1234!",
+    "firstname": "Razvan",
+    "lastname": "Savel",
+    "phone": "0751459410"
+  },
+    "EXISTING_USER_B": {
+    "username": "test_user",
+    "password": "CRFTest1234!",
+    "firstname": "Michael",
+    "lastname": "Douglas",
+    "phone": "+00402479291278461"
+  },
+  "INVALID_USER_ENDPOINT": {
+    "username": "invaliasd86atr",
+    "password": "invalidpass",
+    "firstname": "Account FirstName",
+    "lastname": "Account FirstName",
+    "phone": "782135691"
+  },
+  "NEW_USER": {
+    "username": "new.user_account",
+    "password": "TEst`&*^#^%*$&",
+    "firstname": "John",
+    "lastname": "Doe",
+    "phone": "+123*(782135691"
+  }
+}

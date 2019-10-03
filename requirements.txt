@@ -1,3 +1,9 @@
 Flask == 1.0.2
-Werkzeug == 0.14.1
+Werkzeug == 0.15.3
 click == 6.7
+pytest-html == 1.22.0
+pytest == 4.6.5
+robotframework-seleniumlibrary == 4.0.0
+robotframework == 3.1.2
+requests == 2.22.0
+pip
